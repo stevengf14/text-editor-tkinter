@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.filedialog import askopenfile, asksaveasfilename
 
 class Editor(tk.Tk):
     def __init__(self):
@@ -51,7 +52,16 @@ class Editor(tk.Tk):
         file_menu.add_command(label='Exit', command=self.quit)
 
     def _open_file(self):
-        pass
+        self.file_open = askopenfile(mode='r+')
+        # Delete text on the screen
+        self.text_camp.delete(1.0, tk.END)
+        # Review previous files
+        if not self.file_open:
+            return
+        with open(self.file_open.name, 'r+') as self.file:
+            text = self.file.read()
+            self.text_camp.insert(1.0, text)
+            self.title(f'*Text Editor - {self.file.name}')
 
     def _save_file(self):
         pass
