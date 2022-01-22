@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import INSERT
 from tkinter.filedialog import askopenfile, asksaveasfilename
 
 class Editor(tk.Tk):
@@ -30,11 +31,15 @@ class Editor(tk.Tk):
         save_button = tk.Button(buttons_frame, text='Save', command=self._save_file)
         save_as_button = tk.Button(buttons_frame, text='Save As...', command=self._save_as_file)
         close_button = tk.Button(buttons_frame, text='Close', command=self._close_file)
+        upper_button = tk.Button(buttons_frame, text='Upper Case', command=self._uppercase)
+        lower_button = tk.Button(buttons_frame, text='Lower Case', command=self._lowercase)
 
         open_button.grid(row=0, column=0, sticky='we', padx=5, pady=5)
-        save_button.grid(row=1, column=0, sticky='we', padx=5, pady=5)
-        save_as_button.grid(row=2, column=0, sticky='we', padx=5, pady=5)
-        close_button.grid(row=3, column=0, sticky='we', padx=5, pady=5)
+        upper_button.grid(row=1, column=0, sticky='we', padx=5, pady=5)
+        lower_button.grid(row=2, column=0, sticky='we', padx=5, pady=5)
+        save_button.grid(row=3, column=0, sticky='we', padx=5, pady=5)
+        save_as_button.grid(row=4, column=0, sticky='we', padx=5, pady=5)
+        close_button.grid(row=5, column=0, sticky='we', padx=5, pady=5)
 
         buttons_frame.grid(row=0, column=0, sticky='ns')
 
@@ -47,6 +52,7 @@ class Editor(tk.Tk):
         file_menu = tk.Menu(app_menu, tearoff=False)
         app_menu.add_cascade(label='File', menu=file_menu)
 
+        file_menu.add_command(label='New', command=self._close_file)
         file_menu.add_command(label='Open', command=self._open_file)
         file_menu.add_command(label='Save', command=self._save_file)
         file_menu.add_command(label='Save As...', command=self._save_as_file)
@@ -93,6 +99,18 @@ class Editor(tk.Tk):
             self.title('Text Editor by Steven Guamán - 2022')
             self.file_open = False
             self.file.close()
+        else:
+            self.text_camp.delete(1.0, tk.END)
+
+    def _uppercase(self):
+        text = self.text_camp.get(1.0, tk.END)
+        self.text_camp.delete(1.0, tk.END)
+        self.text_camp.insert(INSERT, text.upper())
+
+    def _lowercase(self):
+        text = self.text_camp.get(1.0, tk.END)
+        self.text_camp.delete(1.0, tk.END)
+        self.text_camp.insert(INSERT, text.lower())
 
 if __name__ == '__main__':
     editor = Editor()
