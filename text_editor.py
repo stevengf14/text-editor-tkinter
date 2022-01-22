@@ -29,10 +29,12 @@ class Editor(tk.Tk):
         open_button = tk.Button(buttons_frame, text='Open', command=self._open_file)
         save_button = tk.Button(buttons_frame, text='Save', command=self._save_file)
         save_as_button = tk.Button(buttons_frame, text='Save As...', command=self._save_as_file)
+        close_button = tk.Button(buttons_frame, text='Close', command=self._close_file)
 
         open_button.grid(row=0, column=0, sticky='we', padx=5, pady=5)
         save_button.grid(row=1, column=0, sticky='we', padx=5, pady=5)
         save_as_button.grid(row=2, column=0, sticky='we', padx=5, pady=5)
+        close_button.grid(row=3, column=0, sticky='we', padx=5, pady=5)
 
         buttons_frame.grid(row=0, column=0, sticky='ns')
 
@@ -64,10 +66,33 @@ class Editor(tk.Tk):
             self.title(f'*Text Editor - {self.file.name}')
 
     def _save_file(self):
-        pass
+        if self.file_open:
+            with open(self.file_open.name, 'w') as self.file:
+                text = self.text_camp.get(1.0, tk.END)
+                self.file.write(text)
+                self.title(f'Text Editor - {self.file.name}')
+        else:
+            self._save_as_file()
 
     def _save_as_file(self):
-        pass
+        self.file = asksaveasfilename(
+            defaultextension='txt',
+            filetypes=[('Text File', '*.txt'), ('All Files', '*,*')]
+        )
+        if not self.file:
+            return
+        with open(self.file, 'w') as self.file:
+            text = self.text_camp.get(1.0, tk.END)
+            self.file.write(text)
+            self.title(f'Text Editor - {self.file.name}')
+            self.file_open = self.file
+
+    def _close_file(self):
+        if self.file_open:
+            self.text_camp.delete(1.0, tk.END)
+            self.title('Text Editor by Steven Guamán - 2022')
+            self.file_open = False
+            self.file.close()
 
 if __name__ == '__main__':
     editor = Editor()
